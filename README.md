@@ -27,8 +27,15 @@ Tips:
 
 ## build
 
-`gcc eeeeeeeeval.cpp -lstdc++ -lm -o eeeeeeeeval`
+`gcc eeeeeeeeval.cpp -lstdc++ -std=c++20 -lm -O3 -o eeeeeeeeval`
 
+
+## benchmarks
+
+```
+gcc benchmark.cpp -lstdc++ -std=c++20 -lm -O3 -o benchmark
+./benchmark
+```
 
 
 
