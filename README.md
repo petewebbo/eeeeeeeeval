@@ -25,6 +25,12 @@ Tips:
 - all values are float
 - all operations take two args. Add a dummy second variable for sin/cos
 
+## WHYYYY????
+
+- It is VERY small
+- It does only what I want it to
+- I felt compelled to do it
+
 ## build
 
 `gcc eeeeeeeeval.cpp -lstdc++ -std=c++20 -lm -O3 -o eeeeeeeeval`
