@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <array>
 
 using std::cout;
 using std::endl;
@@ -29,22 +30,75 @@ struct eeeeeeeeval {
         NA
     };
 
+    std::array<uint8_t, OPERATOR::NA>  numArgs{
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1
+    };
+
     std::vector<var_t> args;
     std::vector<data_t> stack;
     const string operators = "+-*/^!sc";
 
-    static var_t e_add(var_t a, var_t b) { return a + b; }
-    static var_t e_sub(var_t a, var_t b) { return a - b; }
-    static var_t e_mul(var_t a, var_t b) { return a * b; }
-    static var_t e_div(var_t a, var_t b) { return a / b; }
-    static var_t e_pow(var_t a, var_t b) { return powf(a, b); }
-    static var_t e_not(var_t a, var_t b) { return !a; }
-    static var_t e_sin(var_t a, var_t b) { return std::sin(a); }
-    static var_t e_cos(var_t a, var_t b) { return std::cos(a); }
+    var_t e_add(data_t*& stackPtr) {
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return args[aPos] + args[bPos];
+    }
+    var_t e_sub(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return args[aPos] - args[bPos];
+    }
+    var_t e_mul(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return args[aPos] * args[bPos];
+    }
+    var_t e_div(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return args[aPos] / args[bPos];
+    }
+    var_t e_pow(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return powf(args[aPos], args[bPos]);
+    }
+    var_t e_not(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return !args[aPos];
+    }
+    var_t e_sin(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return std::sin(args[aPos]); 
+    }
+    var_t e_cos(data_t*& stackPtr) { 
+        uint32_t aPos = *stackPtr++;
+        uint32_t bPos = *stackPtr++;
+        return std::cos(args[aPos]);
+    }
 
-    typedef var_t (*operation_t)(var_t, var_t);
-    const operation_t operations[(size_t)OPERATOR::NA] = {e_add, e_sub, e_mul, e_div, e_pow, e_not, e_sin, e_cos};
+    using operation_t = var_t (eeeeeeeeval::*)(data_t*&);
+    const operation_t operations[(size_t)OPERATOR::NA] = {
+        &eeeeeeeeval::e_add, 
+        &eeeeeeeeval::e_sub, 
+        &eeeeeeeeval::e_mul, 
+        &eeeeeeeeval::e_div, 
+        &eeeeeeeeval::e_pow, 
+        &eeeeeeeeval::e_not, 
+        &eeeeeeeeval::e_sin, 
+        &eeeeeeeeval::e_cos
+    };
 
+    
     size_t findCharSameLevel(const string& expr, const char* match) {
         size_t cnt{};
 
@@ -119,15 +173,18 @@ struct eeeeeeeeval {
 
     var_t eval() {
         var_t res;
-        auto stackPtr = stack.begin();
-        while (stackPtr < stack.end()) {
+        data_t* stackPtr = stack.data();
+        while (stackPtr < (stack.data()+stack.size())) {
             OPERATOR op = (OPERATOR)*stackPtr++;
-            uint32_t arg1Pos = *stackPtr++;
-            uint32_t arg2Pos = *stackPtr++;
-            uint32_t outPos = *stackPtr++;
+            // uint32_t arg1Pos = *stackPtr++;
+            // uint32_t arg2Pos = *stackPtr++;
+            
 
-            auto func = operations[(data_t)op];
-            args[outPos] = func(args[arg1Pos], args[arg2Pos]);
+            // auto func = operations[(data_t)op];
+            auto res = (this->*operations[(data_t)op])(stackPtr);
+            data_t outPos = *stackPtr++;
+            args[outPos] = res;
+
         }
 
         return args.back();
