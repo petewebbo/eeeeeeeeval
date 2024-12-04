@@ -106,7 +106,7 @@ struct eeeeeeeeval {
         uint32_t aPos = *stackPtr++;
         uint32_t bPos = *stackPtr++;
         uint32_t cPos = *stackPtr++;
-        return ((bool)args[aPos]) ? args[cPos] : args[bPos];
+        return ((bool)args[aPos]) ? args[bPos] : args[cPos];
     }
     var_t e_gt(data_t*& stackPtr) {
         uint32_t aPos = *stackPtr++;

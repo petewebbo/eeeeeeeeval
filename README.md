@@ -14,16 +14,18 @@ Allowed operations:
 | * | multiply | 
 | / | divide | 
 | ^ | powf | 
-| ! | not (what does this do to a float? who cares) |
 | s | sin  | 
 | c | cos | 
+| > | greater than | 
+| < | less than | 
+| = | equal to | 
+| ? | ternary if/else | 
 
 
 Tips:
 
 - no spaces
 - all values are float
-- all operations take two args. Add a dummy second variable for sin/cos
 
 ## WHYYYY????
 
